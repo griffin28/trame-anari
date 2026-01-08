@@ -3,10 +3,10 @@
 #############################################
 FROM nvidia/cuda:12.2.0-devel-ubuntu22.04 AS visrtxbuilder
 
-ARG ANARI_VERSION=0.14.1
+ARG ANARI_VERSION=0.16.0
 ARG ANARI_PREFIX=/opt/anari
 ARG VISRTX_PREFIX=/opt/visrtx
-ARG VISRTX_VERSION=0.12.0
+ARG VISRTX_VERSION=0.13.0
 
 # Install dev tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Build ANARI
 RUN mkdir -p ${ANARI_PREFIX} \
-    && git clone --branch v${ANARI_VERSION} https://github.com/KhronosGroup/ANARI-SDK.git ${ANARI_PREFIX}/src \
+    && git clone --branch next_release https://github.com/KhronosGroup/ANARI-SDK.git ${ANARI_PREFIX}/src \
     && cmake -S ${ANARI_PREFIX}/src/ -B ${ANARI_PREFIX}/build -G Ninja \
         -DCMAKE_INSTALL_PREFIX=${ANARI_PREFIX}/install \
         -DBUILD_VIEWER:BOOL=OFF \
@@ -111,7 +111,8 @@ RUN /opt/trame/entrypoint.sh build
 # Build VTK
 RUN mkdir -p /opt/vtk/src \
     && cd /opt/vtk/src \
-    && curl -L https://vtk.org/files/release/9.5/VTK-9.5.2.tar.gz | tar --strip-components=1 -xzv \
+    && git clone --branch anari_texture https://gitlab.kitware.com/sankhesh/vtk.git /opt/vtk/src \
+    # && curl -L https://vtk.org/files/release/9.5/VTK-9.5.2.tar.gz | tar --strip-components=1 -xzv \
     && cmake \
         -S /opt/vtk/src \
         -B /opt/vtk/build \
@@ -161,7 +162,7 @@ RUN mkdir -p /opt/vtk/src \
         -D VTK_MODULE_ENABLE_VTK_SerializationManager:STRING=YES \
         -D VTK_MODULE_ENABLE_VTK_RenderingAnari:STRING=YES \
         -D VTK_MODULE_ENABLE_VTK_FiltersTexture:STRING=YES \
-        -D anari_DIR:PATH=/opt/anari/install/lib/cmake/anari-0.14.1 \
+        -D anari_DIR:PATH=/opt/anari/install/lib/cmake/anari-0.16.0 \
         -D Python3_EXECUTABLE=/deploy/server/venv/bin/python \
     && cmake --build /opt/vtk/build \
     && cmake --install /opt/vtk/build
