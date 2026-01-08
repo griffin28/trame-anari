@@ -1,6 +1,9 @@
 # ANARI Pan3D Demo
 
-A Docker-based trame application showcasing Pan3D with ANARI rendering backends (helide, visgl, visrtx).
+<img width="1909" height="1089" alt="Screenshot from 2026-01-08 17-37-27" src="https://github.com/user-attachments/assets/ca596aba-55b8-44e7-8c24-edb8461548c1" />
+
+
+A Docker-based trame application showcasing Pan3D with ANARI rendering backends (helide, visgl, visrtx). The image above is Pan3D with ANARI's VisRTX rendering backend.
 
 ## Build Docker Image
 
