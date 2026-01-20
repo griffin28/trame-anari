@@ -84,6 +84,11 @@ ARG VISRTX_PREFIX=/opt/visrtx
 COPY --from=visrtxbuilder ${ANARI_PREFIX} ${ANARI_PREFIX}
 COPY --from=visrtxbuilder ${VISRTX_PREFIX} ${VISRTX_PREFIX}
 
+# Copy example data
+# RUN mkdir -p /data/pan3d
+# COPY ciff_gust_ens_2025010800_v4.nc /data/pan3d/
+# RUN chmod -R a+rwx /data/pan3d
+
 # Setup trame app configuration for pan3d
 RUN mkdir -p /deploy/setup \
     && echo "pan3d[all]>=1.2" > /deploy/setup/requirements.txt \
@@ -111,7 +116,7 @@ RUN /opt/trame/entrypoint.sh build
 # Build VTK
 RUN mkdir -p /opt/vtk/src \
     && cd /opt/vtk/src \
-    && git clone --branch anari_texture https://gitlab.kitware.com/sankhesh/vtk.git /opt/vtk/src \
+    && git clone --branch anari_texture_2 https://gitlab.kitware.com/sankhesh/vtk.git /opt/vtk/src \
     # && curl -L https://vtk.org/files/release/9.5/VTK-9.5.2.tar.gz | tar --strip-components=1 -xzv \
     && cmake \
         -S /opt/vtk/src \
